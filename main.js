@@ -10,6 +10,9 @@ formularioCalculadora.addEventListener('submit', (evento) => {
 function calcularCalorias() {
     aparecerResultado();
 
+    const nombre = document.querySelector('#name')
+    const tipoDeDocumento = document.querySelector('#document-type')
+    const numeroDeDocumento = document.querySelector('#document-number')
     const edad = document.querySelector('#edad');
     const peso = document.querySelector('#peso');
     const altura = document.querySelector('#altura');
@@ -23,13 +26,30 @@ function calcularCalorias() {
         edad: 5
     }
 
-    if ( !(edad.value && peso.value && altura.value) ) {
+    if ( !(edad.value && peso.value && altura.value  && nombre.value && tipoDeDocumento.value && numeroDeDocumento.value && actividad.value )) {
         mostrarMensajeDeError('Por favor asegúrese de llenar todos los campos');
         return;
     } else if (edad.value < 15 || edad.value > 80) {
         mostrarMensajeDeError('La edad ingresada no es permitida');
         return;
     }
+    
+    // Asignar grupo poblacional
+    function grupoPoblacional(edad){
+        if(edad >= 15 && edad <= 29) {
+            let grupo = 'Joven';
+            return grupo
+        }
+        if(edad >= 30 && edad <= 59) {
+            let grupo = 'Adulto';
+            return grupo
+        }
+        if(edad >= 60) {
+            let grupo = 'Adulto mayor';
+            return grupo
+        }
+    } 
+
     
     let calculoCalorias;
     if (genero.id === 'hombre') {
@@ -43,6 +63,8 @@ function calcularCalorias() {
                                              (multiplicadorTMB.altura * altura.value) -
                                              (multiplicadorTMB.edad * edad.value)) -161
     }
+
+    
     
     // totalCalorias.value = `${Math.floor(calculoCalorias)} kcal`;
     
@@ -50,11 +72,18 @@ function calcularCalorias() {
         <div class=" card-body d-flex flex-column justify-content-center align-items-center h-100" id="calculo">
             <h5 class="card-title h2">Calorías requeridas</h5>
             <div class="mb-3 w-100">
+                <p>El paciente ${nombre.value} identificado con ${tipoDeDocumento.value}
+                NO.${numeroDeDocumento.value}, requiere un total de: </p>
                 <input class="form-control text-center" value="${Math.floor(calculoCalorias)} kcal" style="font-size: 2rem" disabled>
+                <p class="mt-3">para el sostenimiento de su TBM</p>
+                <p>Grupo poblacional: ${grupoPoblacional(edad.value)}</p>
             </div>
         </div>
     `
 
+    nombre.value = null;
+    tipoDeDocumento.value = null;
+    numeroDeDocumento.value = null;
     peso.value = null;
     altura.value = null;
     edad.value = null;
